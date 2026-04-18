@@ -507,26 +507,26 @@
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.62);
   scene.add(ambientLight);
 
-  const goldLight = new THREE.PointLight(0xffd700, 1.6, 140);
-  goldLight.position.set(12, 8, 18);
+  const goldLight = new THREE.PointLight(0xffd700, 1.8, 160);
+  goldLight.position.set(12, 10, 20);
   scene.add(goldLight);
 
-  const whiteLight = new THREE.PointLight(0xffffff, 1.15, 140);
-  whiteLight.position.set(-10, -6, 18);
+  const whiteLight = new THREE.PointLight(0xffffff, 1.15, 160);
+  whiteLight.position.set(-12, -6, 18);
   scene.add(whiteLight);
 
-  const rimLight = new THREE.PointLight(0xfff1b8, 0.85, 140);
-  rimLight.position.set(0, 10, 22);
+  const rimLight = new THREE.PointLight(0xfff0b3, 0.9, 180);
+  rimLight.position.set(0, 12, 24);
   scene.add(rimLight);
 
-  const performanceGroup = new THREE.Group();
-  performanceGroup.position.set(0, -0.2, -10);
-  performanceGroup.scale.set(1.08, 1.08, 1.08);
-  scene.add(performanceGroup);
+  const artGroup = new THREE.Group();
+  artGroup.position.set(0, -0.1, -10);
+  artGroup.scale.set(1.08, 1.08, 1.08);
+  scene.add(artGroup);
 
   function createRibbon(points, radius, color, opacity, emissiveIntensity) {
     const curve = new THREE.CatmullRomCurve3(points, false, "centripetal", 0.45);
-    const geometry = new THREE.TubeGeometry(curve, 260, radius, 18, false);
+    const geometry = new THREE.TubeGeometry(curve, 320, radius, 20, false);
     const material = new THREE.MeshPhongMaterial({
       color,
       specular: 0xffffff,
@@ -539,60 +539,85 @@
     return new THREE.Mesh(geometry, material);
   }
 
-  const goldRibbonA = createRibbon([
-    new THREE.Vector3(-6.4, -1.5, 0.8),
-    new THREE.Vector3(-3.8, -3.1, 1.4),
-    new THREE.Vector3(-1.0, -1.6, 0.4),
-    new THREE.Vector3(1.6, 0.4, -0.3),
-    new THREE.Vector3(4.1, 2.6, 0.5),
-    new THREE.Vector3(6.0, 1.3, 0.2)
-  ], 0.20, 0xf3c400, 0.95, 0.12);
+  const ribbonA = createRibbon([
+    new THREE.Vector3(-8.2, -1.8, 0.5),
+    new THREE.Vector3(-5.1, -3.2, 1.2),
+    new THREE.Vector3(-1.8, -1.4, 0.6),
+    new THREE.Vector3(1.6, 0.8, -0.1),
+    new THREE.Vector3(4.8, 2.9, 0.4),
+    new THREE.Vector3(7.8, 1.4, 0.2)
+  ], 0.18, 0xf3c400, 0.96, 0.10);
 
-  const whiteRibbon = createRibbon([
-    new THREE.Vector3(-5.4, 2.7, -0.8),
-    new THREE.Vector3(-2.2, 3.6, 0.4),
-    new THREE.Vector3(0.4, 1.9, 0.2),
-    new THREE.Vector3(2.5, -1.0, -0.5),
-    new THREE.Vector3(4.8, -2.7, 0.2)
-  ], 0.09, 0xffffff, 0.42, 0.03);
+  const ribbonB = createRibbon([
+    new THREE.Vector3(-6.4, 3.4, -0.8),
+    new THREE.Vector3(-3.0, 4.4, 0.2),
+    new THREE.Vector3(-0.2, 2.1, 0.4),
+    new THREE.Vector3(2.4, -0.6, -0.2),
+    new THREE.Vector3(5.3, -3.0, 0.1)
+  ], 0.09, 0xffffff, 0.42, 0.025);
 
-  const goldRibbonB = createRibbon([
-    new THREE.Vector3(-3.8, 1.0, 0.5),
-    new THREE.Vector3(-1.4, 0.9, 0.8),
-    new THREE.Vector3(1.4, 0.2, -0.2),
-    new THREE.Vector3(3.9, -0.8, 0.1)
-  ], 0.05, 0xffd700, 0.30, 0.08);
+  const ribbonC = createRibbon([
+    new THREE.Vector3(-4.8, 1.2, 0.6),
+    new THREE.Vector3(-1.4, 0.7, 0.8),
+    new THREE.Vector3(1.8, 0.1, -0.2),
+    new THREE.Vector3(5.1, -1.0, 0.1)
+  ], 0.05, 0xffd700, 0.30, 0.06);
 
-  performanceGroup.add(goldRibbonA);
-  performanceGroup.add(whiteRibbon);
-  performanceGroup.add(goldRibbonB);
+  artGroup.add(ribbonA);
+  artGroup.add(ribbonB);
+  artGroup.add(ribbonC);
 
-  const cageOuter = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(7.4, 1),
-    new THREE.MeshBasicMaterial({
-      color: 0xffd700,
-      wireframe: true,
+  const bladeGroup = new THREE.Group();
+  artGroup.add(bladeGroup);
+
+  function createBlade(w, h, color, opacity, x, y, z, rotZ) {
+    const geometry = new THREE.BoxGeometry(w, h, 0.04);
+    const material = new THREE.MeshBasicMaterial({
+      color,
       transparent: true,
-      opacity: 0.11
-    })
-  );
+      opacity
+    });
+    const blade = new THREE.Mesh(geometry, material);
+    blade.position.set(x, y, z);
+    blade.rotation.z = rotZ;
+    bladeGroup.add(blade);
+    return blade;
+  }
 
-  const cageInner = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(4.8, 0),
+  const blade1 = createBlade(6.4, 0.10, 0xffd700, 0.18, -1.2, 1.9, 0.2, -0.42);
+  const blade2 = createBlade(4.8, 0.07, 0xffffff, 0.13, 2.0, -1.1, 0.15, -0.42);
+  const blade3 = createBlade(3.5, 0.05, 0xffd700, 0.10, 2.8, 2.1, 0.1, -0.42);
+  const blade4 = createBlade(2.8, 0.04, 0xffffff, 0.08, -3.2, -2.0, 0.1, -0.42);
+
+  const crystalA = new THREE.Mesh(
+    new THREE.OctahedronGeometry(5.2, 0),
     new THREE.MeshBasicMaterial({
       color: 0xffffff,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.08
+    })
+  );
+  crystalA.scale.set(1.35, 0.82, 0.55);
+  crystalA.rotation.z = 0.3;
+  artGroup.add(crystalA);
+
+  const crystalB = new THREE.Mesh(
+    new THREE.OctahedronGeometry(8.6, 0),
+    new THREE.MeshBasicMaterial({
+      color: 0xffd700,
       wireframe: true,
       transparent: true,
       opacity: 0.09
     })
   );
-
-  performanceGroup.add(cageOuter);
-  performanceGroup.add(cageInner);
+  crystalB.scale.set(1.1, 0.86, 0.6);
+  crystalB.rotation.z = -0.2;
+  artGroup.add(crystalB);
 
   function createEllipse(rx, ry, color, opacity, rotX, rotY, rotZ) {
     const curve = new THREE.EllipseCurve(0, 0, rx, ry, 0, Math.PI * 2, false, 0);
-    const points = curve.getPoints(220).map(p => new THREE.Vector3(p.x, p.y, 0));
+    const points = curve.getPoints(240).map(p => new THREE.Vector3(p.x, p.y, 0));
     const geometry = new THREE.BufferGeometry().setFromPoints(points);
     const material = new THREE.LineBasicMaterial({
       color,
@@ -601,66 +626,35 @@
     });
     const line = new THREE.LineLoop(geometry, material);
     line.rotation.set(rotX, rotY, rotZ);
-    performanceGroup.add(line);
+    artGroup.add(line);
     return line;
   }
 
-  const orbit1 = createEllipse(9.0, 5.6, 0xffd700, 0.17, 0.85, 0.22, 0.2);
-  const orbit2 = createEllipse(12.6, 6.1, 0xffffff, 0.08, 1.6, -0.32, -0.2);
-  const orbit3 = createEllipse(16.8, 8.2, 0xffd700, 0.05, 1.02, 1.06, 0.3);
-
-  const slashGroup = new THREE.Group();
-  performanceGroup.add(slashGroup);
-
-  function createSlash(w, h, color, opacity, x, y, z, rotZ) {
-    const geometry = new THREE.BoxGeometry(w, h, 0.05);
-    const material = new THREE.MeshBasicMaterial({
-      color,
-      transparent: true,
-      opacity
-    });
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, z);
-    mesh.rotation.z = rotZ;
-    slashGroup.add(mesh);
-    return mesh;
-  }
-
-  const slash1 = createSlash(6.0, 0.11, 0xffd700, 0.18, -1.1, 1.6, 0.2, -0.42);
-  const slash2 = createSlash(4.0, 0.08, 0xffffff, 0.13, 1.9, -1.1, 0.1, -0.42);
-  const slash3 = createSlash(3.1, 0.06, 0xffd700, 0.10, 2.3, 1.8, 0.15, -0.42);
-
-  const hubRing = new THREE.Mesh(
-    new THREE.TorusGeometry(5.4, 0.06, 20, 160),
-    new THREE.MeshBasicMaterial({
-      color: 0xffd700,
-      transparent: true,
-      opacity: 0.28
-    })
-  );
-  hubRing.rotation.x = Math.PI / 2;
-  performanceGroup.add(hubRing);
+  const orbit1 = createEllipse(10.2, 5.8, 0xffd700, 0.16, 0.85, 0.25, 0.25);
+  const orbit2 = createEllipse(14.8, 6.8, 0xffffff, 0.07, 1.55, -0.35, -0.18);
+  const orbit3 = createEllipse(19.0, 8.5, 0xffd700, 0.05, 1.05, 1.0, 0.35);
 
   const nodeGroup = new THREE.Group();
-  performanceGroup.add(nodeGroup);
+  artGroup.add(nodeGroup);
 
   const nodeData = [];
-  for (let i = 0; i < 8; i++) {
-    const geo = new THREE.SphereGeometry(i % 2 === 0 ? 0.11 : 0.06, 12, 12);
-    const mat = new THREE.MeshBasicMaterial({
-      color: i % 2 === 0 ? 0xffd700 : 0xffffff,
-      transparent: true,
-      opacity: i % 2 === 0 ? 0.7 : 0.2
-    });
-    const dot = new THREE.Mesh(geo, mat);
-    nodeGroup.add(dot);
+  for (let i = 0; i < 10; i++) {
+    const node = new THREE.Mesh(
+      new THREE.SphereGeometry(i % 2 === 0 ? 0.11 : 0.06, 14, 14),
+      new THREE.MeshBasicMaterial({
+        color: i % 2 === 0 ? 0xffd700 : 0xffffff,
+        transparent: true,
+        opacity: i % 2 === 0 ? 0.72 : 0.18
+      })
+    );
+    nodeGroup.add(node);
 
     nodeData.push({
-      mesh: dot,
-      radiusX: i % 2 === 0 ? 8.8 : 12.4,
-      radiusY: i % 2 === 0 ? 5.4 : 6.0,
-      speed: 0.24 + i * 0.03,
-      offset: i * 0.75
+      mesh: node,
+      radiusX: i % 2 === 0 ? 9.6 : 13.8,
+      radiusY: i % 2 === 0 ? 5.6 : 6.8,
+      speed: 0.22 + i * 0.028,
+      offset: i * 0.7
     });
   }
 
@@ -693,10 +687,74 @@
     return new THREE.Points(geometry, material);
   }
 
-  const particlesGold = createParticles(900, 12, 28, 0.035, 0xffd700, 0.35);
-  const particlesWhite = createParticles(700, 18, 34, 0.025, 0xffffff, 0.16);
+  const particlesGold = createParticles(1100, 12, 30, 0.036, 0xffd700, 0.34);
+  const particlesWhite = createParticles(900, 18, 36, 0.024, 0xffffff, 0.14);
   scene.add(particlesGold);
   scene.add(particlesWhite);
+
+  const cometGroup = new THREE.Group();
+  artGroup.add(cometGroup);
+
+  const comets = [];
+
+  function createComet(color, opacity) {
+    const head = new THREE.Mesh(
+      new THREE.SphereGeometry(0.08, 10, 10),
+      new THREE.MeshBasicMaterial({
+        color,
+        transparent: true,
+        opacity
+      })
+    );
+
+    const positions = new Float32Array(6);
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
+    const line = new THREE.Line(
+      geometry,
+      new THREE.LineBasicMaterial({
+        color,
+        transparent: true,
+        opacity: opacity * 0.65
+      })
+    );
+
+    cometGroup.add(line);
+    cometGroup.add(head);
+
+    return { head, line };
+  }
+
+  function resetComet(comet) {
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 24 + Math.random() * 10;
+    const height = (Math.random() - 0.5) * 8;
+
+    comet.start = new THREE.Vector3(
+      Math.cos(angle) * dist,
+      Math.sin(angle) * (8 + Math.random() * 6),
+      height
+    );
+
+    comet.end = new THREE.Vector3(
+      (Math.random() - 0.5) * 4.2,
+      (Math.random() - 0.5) * 3.2,
+      (Math.random() - 0.5) * 1.0
+    );
+
+    comet.progress = Math.random() * 0.8;
+    comet.speed = 0.004 + Math.random() * 0.006;
+    comet.tail = 1.6 + Math.random() * 2.2;
+    comet.wobble = 0.15 + Math.random() * 0.22;
+    comet.phase = Math.random() * Math.PI * 2;
+  }
+
+  for (let i = 0; i < 14; i++) {
+    const comet = createComet(i % 3 === 0 ? 0xffffff : 0xffd700, i % 3 === 0 ? 0.75 : 0.95);
+    resetComet(comet);
+    comets.push(comet);
+  }
 
   const mouse = {
     x: 0,
@@ -710,7 +768,7 @@
     mouse.ty = (e.clientY / window.innerHeight - 0.5) * 2;
   });
 
-  gsap.from(performanceGroup.scale, {
+  gsap.from(artGroup.scale, {
     x: 0.72,
     y: 0.72,
     z: 0.72,
@@ -718,13 +776,16 @@
     ease: "power3.out"
   });
 
-  gsap.from(performanceGroup.rotation, {
-    y: -0.9,
+  gsap.from(artGroup.rotation, {
+    y: -1.0,
     duration: 1.8,
     ease: "power3.out"
   });
 
   const clock = new THREE.Clock();
+  const tempPos = new THREE.Vector3();
+  const tempDir = new THREE.Vector3();
+  const tempPerp = new THREE.Vector3();
 
   function animate() {
     requestAnimationFrame(animate);
@@ -734,49 +795,77 @@
     mouse.x += (mouse.tx - mouse.x) * 0.035;
     mouse.y += (mouse.ty - mouse.y) * 0.035;
 
-    performanceGroup.rotation.x = 0.04 + mouse.y * 0.08;
-    performanceGroup.rotation.y = mouse.x * 0.12 + Math.sin(t * 0.22) * 0.04;
-    performanceGroup.rotation.z = Math.sin(t * 0.16) * 0.02;
+    artGroup.rotation.x = 0.05 + mouse.y * 0.08;
+    artGroup.rotation.y = mouse.x * 0.12 + Math.sin(t * 0.22) * 0.04;
+    artGroup.rotation.z = Math.sin(t * 0.18) * 0.02;
 
-    performanceGroup.position.x = mouse.x * 0.75;
-    performanceGroup.position.y = -0.2 - mouse.y * 0.45;
+    artGroup.position.x = mouse.x * 0.75;
+    artGroup.position.y = -0.1 - mouse.y * 0.42;
 
-    goldRibbonA.rotation.z = Math.sin(t * 0.45) * 0.06;
-    whiteRibbon.rotation.z = -Math.sin(t * 0.38) * 0.04;
-    goldRibbonB.rotation.z = Math.sin(t * 0.58) * 0.05;
+    ribbonA.rotation.z = Math.sin(t * 0.45) * 0.06;
+    ribbonB.rotation.z = -Math.sin(t * 0.38) * 0.04;
+    ribbonC.rotation.z = Math.sin(t * 0.58) * 0.05;
 
-    cageOuter.rotation.x += 0.0012;
-    cageOuter.rotation.y -= 0.0016;
-    cageInner.rotation.x -= 0.001;
-    cageInner.rotation.y += 0.0014;
+    bladeGroup.rotation.z = Math.sin(t * 0.52) * 0.035;
+    blade1.position.x = -1.2 + Math.sin(t * 1.1) * 0.18;
+    blade2.position.x = 2.0 - Math.sin(t * 1.0) * 0.14;
+    blade3.position.x = 2.8 - Math.sin(t * 1.35) * 0.12;
+    blade4.position.x = -3.2 + Math.sin(t * 1.2) * 0.10;
 
-    orbit1.rotation.z += 0.0024;
-    orbit2.rotation.z -= 0.0015;
+    crystalA.rotation.x += 0.0010;
+    crystalA.rotation.y -= 0.0015;
+    crystalB.rotation.x -= 0.0008;
+    crystalB.rotation.y += 0.0012;
+
+    orbit1.rotation.z += 0.0025;
+    orbit2.rotation.z -= 0.0016;
     orbit3.rotation.z += 0.0009;
-
-    hubRing.rotation.z += 0.0032;
-
-    slashGroup.rotation.z = Math.sin(t * 0.55) * 0.035;
-    slash1.position.x = -1.1 + Math.sin(t * 1.1) * 0.16;
-    slash2.position.x = 1.9 - Math.sin(t * 1.05) * 0.12;
-    slash3.position.x = 2.3 - Math.sin(t * 1.3) * 0.10;
 
     nodeData.forEach((item, i) => {
       const a = t * item.speed + item.offset;
       item.mesh.position.set(
         Math.cos(a) * item.radiusX,
         Math.sin(a) * item.radiusY,
-        Math.sin(a * 1.5) * 0.12
+        Math.sin(a * 1.5) * 0.16
       );
       const s = 1 + Math.sin(t * 1.8 + i) * 0.12;
       item.mesh.scale.set(s, s, s);
     });
 
-    particlesGold.rotation.y = t * 0.01;
+    comets.forEach((comet, i) => {
+      comet.progress += comet.speed;
+      if (comet.progress >= 1) resetComet(comet);
+
+      const p = comet.progress * comet.progress * (3 - 2 * comet.progress);
+      tempPos.lerpVectors(comet.start, comet.end, p);
+
+      tempDir.copy(comet.end).sub(comet.start).normalize();
+      tempPerp.set(-tempDir.y, tempDir.x, 0).normalize();
+
+      const wobble = Math.sin(t * 2.0 + comet.phase + i) * comet.wobble;
+      tempPos.addScaledVector(tempPerp, wobble);
+
+      comet.head.position.copy(tempPos);
+
+      const tailEnd = tempPos.clone().addScaledVector(tempDir, -comet.tail);
+      const arr = comet.line.geometry.attributes.position.array;
+
+      arr[0] = tempPos.x;
+      arr[1] = tempPos.y;
+      arr[2] = tempPos.z;
+
+      arr[3] = tailEnd.x;
+      arr[4] = tailEnd.y;
+      arr[5] = tailEnd.z;
+
+      comet.line.geometry.attributes.position.needsUpdate = true;
+    });
+
+    particlesGold.rotation.y = t * 0.010;
     particlesWhite.rotation.y = -t * 0.006;
 
     camera.position.x += ((mouse.x * 0.6) - camera.position.x) * 0.03;
-    camera.position.y += ((-mouse.y * 0.4) - camera.position.y) * 0.03;
+    camera.position.y += ((-mouse.y * 0.38) - camera.position.y) * 0.03;
     camera.lookAt(0, 0, 0);
 
     renderer.render(scene, camera);
