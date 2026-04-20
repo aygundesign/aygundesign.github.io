@@ -546,87 +546,98 @@
   const logoGroup = new THREE.Group();
   hero3D.add(logoGroup);
 
-  const logoWidth = 11.4;
-  const logoHeight = 7.6;
+  const logoWidth = 12.2;
+const logoHeight = 7.9;
 
-  const plateGeometry = new THREE.BoxGeometry(12.1, 8.2, 0.32);
-  const plateMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0x080808,
-    metalness: 0.9,
-    roughness: 0.18,
-    transmission: 0.08,
+logoTexture.minFilter = THREE.LinearMipmapLinearFilter;
+logoTexture.magFilter = THREE.LinearFilter;
+
+const backPanel = new THREE.Mesh(
+  new THREE.BoxGeometry(13.2, 8.6, 0.10),
+  new THREE.MeshPhysicalMaterial({
+    color: 0x050505,
+    metalness: 0.85,
+    roughness: 0.22,
     transparent: true,
-    opacity: 0.22,
+    opacity: 0.10,
     clearcoat: 1,
-    clearcoatRoughness: 0.08,
-    reflectivity: 1
-  });
-  const logoPlate = new THREE.Mesh(plateGeometry, plateMaterial);
-  logoGroup.add(logoPlate);
+    clearcoatRoughness: 0.10
+  })
+);
+logoGroup.add(backPanel);
 
-  const plateEdges = new THREE.LineSegments(
-    new THREE.EdgesGeometry(plateGeometry),
-    new THREE.LineBasicMaterial({
-      color: 0xffd700,
-      transparent: true,
-      opacity: 0.20
-    })
-  );
-  logoGroup.add(plateEdges);
-
-  const logoPlaneGeometry = new THREE.PlaneGeometry(logoWidth, logoHeight);
-
-  const logoFrontMaterial = new THREE.MeshBasicMaterial({
-    map: logoTexture,
+const frame = new THREE.LineSegments(
+  new THREE.EdgesGeometry(new THREE.BoxGeometry(13.5, 8.9, 0.14)),
+  new THREE.LineBasicMaterial({
+    color: 0xffd700,
     transparent: true,
-    side: THREE.DoubleSide,
-    depthWrite: false
-  });
-  const logoFront = new THREE.Mesh(logoPlaneGeometry, logoFrontMaterial);
-  logoFront.position.z = 0.18;
-  logoGroup.add(logoFront);
+    opacity: 0.18
+  })
+);
+logoGroup.add(frame);
 
-  const logoBackMaterial = new THREE.MeshBasicMaterial({
-    map: logoTexture,
-    transparent: true,
-    side: THREE.DoubleSide,
-    depthWrite: false
-  });
-  const logoBack = new THREE.Mesh(logoPlaneGeometry, logoBackMaterial);
-  logoBack.position.z = -0.18;
-  logoBack.rotation.y = Math.PI;
-  logoGroup.add(logoBack);
+const logoPlaneGeometry = new THREE.PlaneGeometry(logoWidth, logoHeight);
 
-  const glowMaterial = new THREE.MeshBasicMaterial({
+const logoFrontMaterial = new THREE.MeshBasicMaterial({
+  map: logoTexture,
+  transparent: true,
+  alphaTest: 0.05,
+  side: THREE.DoubleSide,
+  depthWrite: false,
+  toneMapped: false
+});
+const logoFront = new THREE.Mesh(logoPlaneGeometry, logoFrontMaterial);
+logoFront.position.z = 0.34;
+logoFront.renderOrder = 10;
+logoGroup.add(logoFront);
+
+const logoBackMaterial = new THREE.MeshBasicMaterial({
+  map: logoTexture,
+  transparent: true,
+  alphaTest: 0.05,
+  side: THREE.DoubleSide,
+  depthWrite: false,
+  toneMapped: false
+});
+const logoBack = new THREE.Mesh(logoPlaneGeometry, logoBackMaterial);
+logoBack.position.z = -0.34;
+logoBack.rotation.y = Math.PI;
+logoBack.renderOrder = 10;
+logoGroup.add(logoBack);
+
+const glowPlaneA = new THREE.Mesh(
+  new THREE.PlaneGeometry(logoWidth * 1.10, logoHeight * 1.10),
+  new THREE.MeshBasicMaterial({
     map: logoTexture,
     color: 0xffd700,
     transparent: true,
-    opacity: 0.16,
+    opacity: 0.20,
     side: THREE.DoubleSide,
     depthWrite: false,
+    toneMapped: false,
     blending: THREE.AdditiveBlending
-  });
-  const glowPlaneA = new THREE.Mesh(
-    new THREE.PlaneGeometry(logoWidth * 1.08, logoHeight * 1.08),
-    glowMaterial
-  );
-  glowPlaneA.position.z = 0.02;
-  logoGroup.add(glowPlaneA);
+  })
+);
+glowPlaneA.position.z = 0.08;
+glowPlaneA.renderOrder = 9;
+logoGroup.add(glowPlaneA);
 
-  const glowPlaneB = new THREE.Mesh(
-    new THREE.PlaneGeometry(logoWidth * 1.16, logoHeight * 1.16),
-    new THREE.MeshBasicMaterial({
-      map: logoTexture,
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.05,
-      side: THREE.DoubleSide,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending
-    })
-  );
-  glowPlaneB.position.z = -0.02;
-  logoGroup.add(glowPlaneB);
+const glowPlaneB = new THREE.Mesh(
+  new THREE.PlaneGeometry(logoWidth * 1.18, logoHeight * 1.18),
+  new THREE.MeshBasicMaterial({
+    map: logoTexture,
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.07,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+    toneMapped: false,
+    blending: THREE.AdditiveBlending
+  })
+);
+glowPlaneB.position.z = -0.08;
+glowPlaneB.renderOrder = 8;
+logoGroup.add(glowPlaneB);
 
   const haloRing = new THREE.Mesh(
     new THREE.TorusGeometry(7.2, 0.08, 20, 180),
