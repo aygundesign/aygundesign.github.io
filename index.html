@@ -451,7 +451,7 @@
 
   <footer>© 2026 AYGUN DESIGN</footer>
 
-  <script>
+<script>
   const cursor = document.querySelector(".cursor");
   document.addEventListener("mousemove", (e) => {
     if (cursor) {
@@ -511,88 +511,85 @@
   renderer.domElement.style.pointerEvents = "none";
   document.body.appendChild(renderer.domElement);
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.58);
+  /* LIGHTS */
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
   scene.add(ambientLight);
 
-  const goldLight = new THREE.PointLight(0xffd700, 1.8, 180);
+  const goldLight = new THREE.PointLight(0xffd700, 2.0, 180);
   goldLight.position.set(12, 10, 20);
   scene.add(goldLight);
 
   const whiteLight = new THREE.PointLight(0xffffff, 1.1, 180);
-  whiteLight.position.set(-12, -8, 18);
+  whiteLight.position.set(-12, -8, 20);
   scene.add(whiteLight);
 
-  const rimLight = new THREE.PointLight(0xffefb0, 0.9, 200);
-  rimLight.position.set(0, 12, 24);
-  scene.add(rimLight);
+  const topLight = new THREE.PointLight(0xffefb0, 0.85, 180);
+  topLight.position.set(0, 12, 24);
+  scene.add(topLight);
 
-  const hero3D = new THREE.Group();
-  hero3D.position.set(0, -0.3, -10);
-  scene.add(hero3D);
+  const blueFill = new THREE.PointLight(0x6f8cff, 0.18, 180);
+  blueFill.position.set(0, -10, 18);
+  scene.add(blueFill);
 
-  const fxGroup = new THREE.Group();
-  hero3D.add(fxGroup);
+  const heroFX = new THREE.Group();
+  heroFX.position.set(0, -0.2, -10);
+  scene.add(heroFX);
 
-  const textureLoader = new THREE.TextureLoader();
-  const logoTexture = textureLoader.load("yenilogo.png");
-  logoTexture.encoding = THREE.sRGBEncoding;
-  logoTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-  logoTexture.minFilter = THREE.LinearMipmapLinearFilter;
-  logoTexture.magFilter = THREE.LinearFilter;
+  /* CORE DISC */
+  const coreDisc = new THREE.Mesh(
+    new THREE.CylinderGeometry(4.8, 4.8, 0.28, 64),
+    new THREE.MeshPhongMaterial({
+      color: 0x0c0c0c,
+      specular: 0x555555,
+      shininess: 120,
+      transparent: true,
+      opacity: 0.92
+    })
+  );
+  coreDisc.rotation.x = Math.PI / 2;
+  heroFX.add(coreDisc);
 
-  const logoGroup = new THREE.Group();
-  hero3D.add(logoGroup);
+  const coreRing = new THREE.Mesh(
+    new THREE.TorusGeometry(5.2, 0.07, 20, 180),
+    new THREE.MeshBasicMaterial({
+      color: 0xffd700,
+      transparent: true,
+      opacity: 0.32
+    })
+  );
+  coreRing.rotation.x = Math.PI / 2;
+  heroFX.add(coreRing);
 
-  const logoWidth = 11.8;
-  const logoHeight = 7.7;
+  const innerRing = new THREE.Mesh(
+    new THREE.TorusGeometry(3.8, 0.045, 20, 180),
+    new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.10
+    })
+  );
+  innerRing.rotation.x = Math.PI / 2;
+  heroFX.add(innerRing);
 
-  function makeLogoPlane(z, opacity, color = 0xffffff, additive = false) {
-    return new THREE.Mesh(
-      new THREE.PlaneGeometry(logoWidth, logoHeight),
-      new THREE.MeshBasicMaterial({
-        map: logoTexture,
-        color,
-        transparent: true,
-        alphaTest: 0.05,
-        opacity,
-        side: THREE.DoubleSide,
-        depthWrite: false,
-        toneMapped: false,
-        blending: additive ? THREE.AdditiveBlending : THREE.NormalBlending
-      })
-    );
+  /* PERFORMANCE ARCS */
+  function createArc(radius, tube, arcLength, color, opacity, rotX, rotY, rotZ) {
+    const geometry = new THREE.TorusGeometry(radius, tube, 20, 160, arcLength);
+    const material = new THREE.MeshBasicMaterial({
+      color,
+      transparent: true,
+      opacity
+    });
+    const arc = new THREE.Mesh(geometry, material);
+    arc.rotation.set(rotX, rotY, rotZ);
+    heroFX.add(arc);
+    return arc;
   }
 
-  /* FAKE 3D DEPTH */
-  const depthPlanes = [];
-  const depthCount = 8;
-  for (let i = 0; i < depthCount; i++) {
-    const p = makeLogoPlane(-0.22 + i * 0.055, 0.10, 0xffb000, false);
-    p.renderOrder = 4;
-    depthPlanes.push(p);
-    logoGroup.add(p);
-  }
+  const arc1 = createArc(6.4, 0.065, Math.PI * 1.20, 0xffd700, 0.28, 0.55, 0.20, 0.10);
+  const arc2 = createArc(8.8, 0.05, Math.PI * 1.05, 0xffffff, 0.14, 1.35, -0.30, -0.15);
+  const arc3 = createArc(11.8, 0.035, Math.PI * 0.95, 0xffd700, 0.10, 2.05, 0.70, 0.28);
 
-  const logoBack = makeLogoPlane(-0.28, 0.92);
-  logoBack.rotation.y = Math.PI;
-  logoBack.renderOrder = 5;
-  logoGroup.add(logoBack);
-
-  const logoFront = makeLogoPlane(0.28, 1);
-  logoFront.renderOrder = 6;
-  logoGroup.add(logoFront);
-
-  const glowA = makeLogoPlane(0.06, 0.14, 0xffd700, true);
-  glowA.scale.set(1.08, 1.08, 1.08);
-  glowA.renderOrder = 3;
-  logoGroup.add(glowA);
-
-  const glowB = makeLogoPlane(-0.04, 0.05, 0xffffff, true);
-  glowB.scale.set(1.16, 1.16, 1.16);
-  glowB.renderOrder = 2;
-  logoGroup.add(glowB);
-
-  /* CLEAN RINGS BEHIND LOGO */
+  /* TRACK LINES */
   function createEllipse(rx, ry, color, opacity, rotX, rotY, rotZ) {
     const curve = new THREE.EllipseCurve(0, 0, rx, ry, 0, Math.PI * 2, false, 0);
     const points = curve.getPoints(220).map(p => new THREE.Vector3(p.x, p.y, 0));
@@ -604,90 +601,114 @@
     });
     const line = new THREE.LineLoop(geometry, material);
     line.rotation.set(rotX, rotY, rotZ);
-    line.position.z = -1.8;
-    fxGroup.add(line);
+    heroFX.add(line);
     return line;
   }
 
-  const orbit1 = createEllipse(8.8, 4.6, 0xffd700, 0.20, 0.95, 0.16, 0.10);
-  const orbit2 = createEllipse(12.8, 5.8, 0xffffff, 0.08, 1.35, -0.24, -0.18);
-  const orbit3 = createEllipse(17.5, 7.4, 0xffd700, 0.05, 1.02, 0.92, 0.25);
+  const orbit1 = createEllipse(10.0, 4.8, 0xffd700, 0.14, 0.95, 0.18, 0.16);
+  const orbit2 = createEllipse(14.0, 5.8, 0xffffff, 0.06, 1.40, -0.24, -0.18);
+  const orbit3 = createEllipse(18.5, 7.6, 0xffd700, 0.04, 1.02, 0.92, 0.26);
 
-  const ringA = new THREE.Mesh(
-    new THREE.TorusGeometry(6.8, 0.05, 20, 160),
-    new THREE.MeshBasicMaterial({
-      color: 0xffd700,
+  /* HEX / FRAME STRUCTURE */
+  function makeHex(radius, color, opacity) {
+    const points = [];
+    for (let i = 0; i <= 6; i++) {
+      const angle = (Math.PI / 3) * i;
+      points.push(new THREE.Vector3(Math.cos(angle) * radius, Math.sin(angle) * radius, 0));
+    }
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const material = new THREE.LineBasicMaterial({
+      color,
       transparent: true,
-      opacity: 0.18
-    })
-  );
-  ringA.rotation.x = Math.PI / 2;
-  ringA.position.z = -1.5;
-  fxGroup.add(ringA);
+      opacity
+    });
+    return new THREE.Line(geometry, material);
+  }
 
-  const ringB = new THREE.Mesh(
-    new THREE.TorusGeometry(5.4, 0.035, 20, 160),
-    new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.08
-    })
-  );
-  ringB.rotation.x = Math.PI / 2;
-  ringB.position.z = -1.2;
-  fxGroup.add(ringB);
+  const frameGroup = new THREE.Group();
+  frameGroup.position.z = -1.6;
+  heroFX.add(frameGroup);
 
-  /* SUBTLE CRYSTAL FRAME BEHIND */
-  const frameA = new THREE.Mesh(
-    new THREE.OctahedronGeometry(7.2, 0),
-    new THREE.MeshBasicMaterial({
-      color: 0xffd700,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.06
-    })
-  );
-  frameA.scale.set(1.16, 0.78, 0.46);
-  frameA.rotation.z = 0.18;
-  frameA.position.z = -2.1;
-  fxGroup.add(frameA);
+  const hex1 = makeHex(5.6, 0xffffff, 0.08);
+  const hex2 = makeHex(8.6, 0xffd700, 0.10);
+  const hex3 = makeHex(12.2, 0xffffff, 0.04);
 
-  const frameB = new THREE.Mesh(
-    new THREE.OctahedronGeometry(5.0, 0),
-    new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.04
-    })
-  );
-  frameB.scale.set(1.08, 0.82, 0.40);
-  frameB.rotation.z = -0.22;
-  frameB.position.z = -1.9;
-  fxGroup.add(frameB);
+  hex2.rotation.z = 0.18;
+  hex3.rotation.z = -0.12;
 
-  /* SPEED STREAKS */
-  const streakGroup = new THREE.Group();
-  streakGroup.position.z = -0.8;
-  fxGroup.add(streakGroup);
+  frameGroup.add(hex1, hex2, hex3);
 
-  function createStreak(width, height, color, opacity, x, y, rotZ) {
+  /* SPEED BLADES */
+  const bladeGroup = new THREE.Group();
+  bladeGroup.position.z = 0.2;
+  heroFX.add(bladeGroup);
+
+  function createBlade(width, height, color, opacity, x, y, rotZ) {
     const geometry = new THREE.BoxGeometry(width, height, 0.04);
     const material = new THREE.MeshBasicMaterial({
       color,
       transparent: true,
       opacity
     });
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, 0);
+    const blade = new THREE.Mesh(geometry, material);
+    blade.position.set(x, y, 0);
+    blade.rotation.z = rotZ;
+    bladeGroup.add(blade);
+    return blade;
+  }
+
+  const blade1 = createBlade(6.0, 0.10, 0xffd700, 0.15, -0.9, 1.8, -0.42);
+  const blade2 = createBlade(4.4, 0.07, 0xffffff, 0.10, 2.0, -1.2, -0.42);
+  const blade3 = createBlade(3.2, 0.05, 0xffd700, 0.08, 2.7, 2.1, -0.42);
+
+  /* SWEEP LIGHTS */
+  const sweepGroup = new THREE.Group();
+  heroFX.add(sweepGroup);
+
+  function createSweep(width, height, color, opacity, rotZ, x) {
+    const mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(width, height),
+      new THREE.MeshBasicMaterial({
+        color,
+        transparent: true,
+        opacity,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+      })
+    );
     mesh.rotation.z = rotZ;
-    streakGroup.add(mesh);
+    mesh.position.set(x, 0, 0.4);
+    sweepGroup.add(mesh);
     return mesh;
   }
 
-  const streak1 = createStreak(5.8, 0.10, 0xffd700, 0.16, -1.2, 1.8, -0.42);
-  const streak2 = createStreak(4.2, 0.07, 0xffffff, 0.10, 2.2, -1.0, -0.42);
-  const streak3 = createStreak(3.0, 0.05, 0xffd700, 0.08, 2.9, 2.0, -0.42);
+  const sweepA = createSweep(1.2, 12.8, 0xffd700, 0.0, -0.40, -8.5);
+  const sweepB = createSweep(0.55, 11.2, 0xffffff, 0.0, -0.40, -9.2);
+
+  /* TARGET DOTS */
+  const dotGroup = new THREE.Group();
+  heroFX.add(dotGroup);
+
+  const dotData = [];
+  for (let i = 0; i < 10; i++) {
+    const dot = new THREE.Mesh(
+      new THREE.SphereGeometry(i % 2 === 0 ? 0.10 : 0.055, 12, 12),
+      new THREE.MeshBasicMaterial({
+        color: i % 2 === 0 ? 0xffd700 : 0xffffff,
+        transparent: true,
+        opacity: i % 2 === 0 ? 0.65 : 0.18
+      })
+    );
+    dotGroup.add(dot);
+    dotData.push({
+      mesh: dot,
+      radiusX: i % 2 === 0 ? 8.8 : 12.8,
+      radiusY: i % 2 === 0 ? 4.8 : 5.8,
+      speed: 0.22 + i * 0.02,
+      offset: i * 0.65
+    });
+  }
 
   /* PARTICLES */
   function createParticles(count, minRadius, maxRadius, size, color, opacity) {
@@ -719,79 +740,12 @@
     return new THREE.Points(geometry, material);
   }
 
-  const particlesGold = createParticles(1000, 12, 30, 0.034, 0xffd700, 0.25);
-  const particlesWhite = createParticles(800, 18, 36, 0.022, 0xffffff, 0.10);
+  const particlesGold = createParticles(900, 12, 28, 0.032, 0xffd700, 0.22);
+  const particlesWhite = createParticles(700, 18, 34, 0.022, 0xffffff, 0.08);
   scene.add(particlesGold);
   scene.add(particlesWhite);
 
-  /* COMETS */
-  const cometGroup = new THREE.Group();
-  hero3D.add(cometGroup);
-
-  const comets = [];
-
-  function createComet(color, opacity) {
-    const head = new THREE.Mesh(
-      new THREE.SphereGeometry(0.09, 10, 10),
-      new THREE.MeshBasicMaterial({
-        color,
-        transparent: true,
-        opacity
-      })
-    );
-
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(new Float32Array(6), 3)
-    );
-
-    const line = new THREE.Line(
-      geometry,
-      new THREE.LineBasicMaterial({
-        color,
-        transparent: true,
-        opacity: opacity * 0.6
-      })
-    );
-
-    cometGroup.add(line);
-    cometGroup.add(head);
-
-    return { head, line };
-  }
-
-  function resetComet(comet) {
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 26 + Math.random() * 12;
-    const yScale = 10 + Math.random() * 8;
-    const z = (Math.random() - 0.5) * 5;
-
-    comet.start = new THREE.Vector3(
-      Math.cos(angle) * dist,
-      Math.sin(angle) * yScale,
-      z
-    );
-
-    comet.end = new THREE.Vector3(
-      (Math.random() - 0.5) * 3.2,
-      (Math.random() - 0.5) * 2.2,
-      (Math.random() - 0.5) * 0.5
-    );
-
-    comet.progress = Math.random() * 0.8;
-    comet.speed = 0.004 + Math.random() * 0.004;
-    comet.tail = 1.6 + Math.random() * 2.1;
-    comet.wobble = 0.10 + Math.random() * 0.15;
-    comet.phase = Math.random() * Math.PI * 2;
-  }
-
-  for (let i = 0; i < 14; i++) {
-    const comet = createComet(i % 3 === 0 ? 0xffffff : 0xffd700, i % 3 === 0 ? 0.72 : 0.92);
-    resetComet(comet);
-    comets.push(comet);
-  }
-
+  /* MOUSE */
   const mouse = {
     x: 0,
     y: 0,
@@ -804,7 +758,7 @@
     mouse.ty = (e.clientY / window.innerHeight - 0.5) * 2;
   });
 
-  gsap.from(hero3D.scale, {
+  gsap.from(heroFX.scale, {
     x: 0.72,
     y: 0.72,
     z: 0.72,
@@ -812,16 +766,13 @@
     ease: "power3.out"
   });
 
-  gsap.from(hero3D.rotation, {
-    y: -0.9,
+  gsap.from(heroFX.rotation, {
+    y: -0.8,
     duration: 1.8,
     ease: "power3.out"
   });
 
   const clock = new THREE.Clock();
-  const tempPos = new THREE.Vector3();
-  const tempDir = new THREE.Vector3();
-  const tempPerp = new THREE.Vector3();
 
   function animate() {
     requestAnimationFrame(animate);
@@ -831,78 +782,54 @@
     mouse.x += (mouse.tx - mouse.x) * 0.035;
     mouse.y += (mouse.ty - mouse.y) * 0.035;
 
-    hero3D.rotation.x = 0.03 + mouse.y * 0.05;
-    hero3D.rotation.y = mouse.x * 0.06 + Math.sin(t * 0.2) * 0.015;
-    hero3D.rotation.z = Math.sin(t * 0.14) * 0.008;
+    heroFX.rotation.x = 0.04 + mouse.y * 0.06;
+    heroFX.rotation.y = mouse.x * 0.08 + Math.sin(t * 0.22) * 0.02;
+    heroFX.rotation.z = Math.sin(t * 0.18) * 0.008;
 
-    hero3D.position.x = mouse.x * 0.6;
-    hero3D.position.y = -0.3 - mouse.y * 0.3;
+    heroFX.position.x = mouse.x * 0.55;
+    heroFX.position.y = -0.2 - mouse.y * 0.28;
 
-    /* MAIN LOGO ROTATION */
-    logoGroup.rotation.y += 0.016;
-    logoGroup.rotation.x = Math.sin(t * 0.55) * 0.045;
-    logoGroup.rotation.z = Math.sin(t * 0.25) * 0.008;
-    logoGroup.position.y = Math.sin(t * 0.9) * 0.10;
+    coreRing.rotation.z += 0.0032;
+    innerRing.rotation.z -= 0.0022;
 
-    const glowScaleA = 1.08 + Math.sin(t * 1.3) * 0.018;
-    const glowScaleB = 1.15 + Math.sin(t * 1.0) * 0.028;
-    glowA.scale.set(glowScaleA, glowScaleA, glowScaleA);
-    glowB.scale.set(glowScaleB, glowScaleB, glowScaleB);
-
-    ringA.rotation.z += 0.0024;
-    ringB.rotation.z -= 0.0018;
+    arc1.rotation.z += 0.0045;
+    arc2.rotation.z -= 0.0030;
+    arc3.rotation.z += 0.0018;
 
     orbit1.rotation.z += 0.0020;
-    orbit2.rotation.z -= 0.0014;
+    orbit2.rotation.z -= 0.0012;
     orbit3.rotation.z += 0.0008;
 
-    frameA.rotation.x += 0.0008;
-    frameA.rotation.y -= 0.0012;
-    frameB.rotation.x -= 0.0006;
-    frameB.rotation.y += 0.0010;
+    frameGroup.rotation.z += 0.0012;
+    frameGroup.rotation.x = Math.sin(t * 0.32) * 0.04;
 
-    streakGroup.rotation.z = Math.sin(t * 0.5) * 0.025;
-    streak1.position.x = -1.2 + Math.sin(t * 1.0) * 0.14;
-    streak2.position.x = 2.2 - Math.sin(t * 0.95) * 0.11;
-    streak3.position.x = 2.9 - Math.sin(t * 1.2) * 0.10;
+    bladeGroup.rotation.z = Math.sin(t * 0.55) * 0.025;
+    blade1.position.x = -0.9 + Math.sin(t * 1.0) * 0.14;
+    blade2.position.x = 2.0 - Math.sin(t * 0.95) * 0.10;
+    blade3.position.x = 2.7 - Math.sin(t * 1.15) * 0.08;
 
-    comets.forEach((comet, i) => {
-      comet.progress += comet.speed;
+    const sweepPhase = (Math.sin(t * 1.0) + 1) * 0.5;
+    sweepA.position.x = -8.5 + sweepPhase * 17;
+    sweepB.position.x = -9.2 + sweepPhase * 18.4;
+    sweepA.material.opacity = 0.03 + sweepPhase * 0.14;
+    sweepB.material.opacity = 0.02 + sweepPhase * 0.09;
 
-      if (comet.progress >= 1) {
-        resetComet(comet);
-      }
-
-      const p = comet.progress * comet.progress * (3 - 2 * comet.progress);
-      tempPos.lerpVectors(comet.start, comet.end, p);
-
-      tempDir.copy(comet.end).sub(comet.start).normalize();
-      tempPerp.set(-tempDir.y, tempDir.x, 0).normalize();
-
-      const wobble = Math.sin(t * 2 + comet.phase + i) * comet.wobble;
-      tempPos.addScaledVector(tempPerp, wobble);
-
-      comet.head.position.copy(tempPos);
-
-      const tailEnd = tempPos.clone().addScaledVector(tempDir, -comet.tail);
-      const arr = comet.line.geometry.attributes.position.array;
-
-      arr[0] = tempPos.x;
-      arr[1] = tempPos.y;
-      arr[2] = tempPos.z;
-
-      arr[3] = tailEnd.x;
-      arr[4] = tailEnd.y;
-      arr[5] = tailEnd.z;
-
-      comet.line.geometry.attributes.position.needsUpdate = true;
+    dotData.forEach((item, i) => {
+      const a = t * item.speed + item.offset;
+      item.mesh.position.set(
+        Math.cos(a) * item.radiusX,
+        Math.sin(a) * item.radiusY,
+        Math.sin(a * 1.6) * 0.14
+      );
+      const s = 1 + Math.sin(t * 1.8 + i) * 0.12;
+      item.mesh.scale.set(s, s, s);
     });
 
     particlesGold.rotation.y = t * 0.008;
     particlesWhite.rotation.y = -t * 0.005;
 
-    camera.position.x += ((mouse.x * 0.45) - camera.position.x) * 0.03;
-    camera.position.y += ((-mouse.y * 0.26) - camera.position.y) * 0.03;
+    camera.position.x += ((mouse.x * 0.42) - camera.position.x) * 0.03;
+    camera.position.y += ((-mouse.y * 0.24) - camera.position.y) * 0.03;
     camera.lookAt(0, 0, 0);
 
     renderer.render(scene, camera);
