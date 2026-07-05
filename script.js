@@ -14603,7 +14603,7 @@ Mc=["Güçlü Markalar","Dijital Deneyimler","Etkili Arayüzler","Akılda Kalan 
     return()=>window.clearInterval(s)
   }
     ,[]),S.jsx("span",{
-      className:"relative block h-[1.15em] overflow-hidden",children:S.jsx(Pc,{
+     className:"relative block min-h-[1.25em] overflow-hidden pb-[0.08em]",children:S.jsx(Pc,{
         mode:"wait",children:S.jsx(ot.span,{
           initial:{
           y:"100%",opacity:0
@@ -14617,7 +14617,7 @@ Mc=["Güçlü Markalar","Dijital Deneyimler","Etkili Arayüzler","Akılda Kalan 
           ,transition:{
           duration:.5,ease:[.22,1,.36,1]
         }
-        ,className:"block gold-text",children:Mc[i]
+        ,className:"block gold-text leading-[1.08]",children:Mc[i]
       }
       ,Mc[i])
     }
@@ -14814,7 +14814,7 @@ ${q}`;
                 ,transition:{
                 duration:1,delay:.35,ease:[.22,1,.36,1]
               }
-                ,className:"mb-7 text-5xl font-black leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl",children:[S.jsx("span",{
+                ,className:"mb-8 text-5xl font-black leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl",children:[S.jsx("span",{
                 className:"block text-white",children:"Markanız için"
               }
                 ),S.jsx(m5,{
@@ -14834,7 +14834,8 @@ ${q}`;
                 ,transition:{
                 duration:.9,delay:.65
               }
-              ,className:"mb-10 max-w-2xl text-base leading-relaxed text-zinc-400 sm:text-lg",children:"Aygun Design; grafik tasarım, marka kimliği, web, UI/UX ve hareketli içerik çözümlerini tek bir yaratıcı sistemde buluşturur."
+              ,className:"mb-10 max-w-2xl text-base leading-[1.7] text-zinc-400 sm:text-lg",
+              children:"Aygun Design; grafik tasarım, marka kimliği, web, UI/UX ve hareketli içerik çözümlerini tek bir yaratıcı sistemde buluşturur."
             }
               ),S.jsxs(ot.div,{
                 initial:{
