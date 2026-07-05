@@ -14501,23 +14501,23 @@ const m3=i=>i.replace(/^([A-Z])|[\s-_]+(\w)/g,(a,s,o)=>o?o.toUpperCase():s.toLow
   )
 }
   const Ec=[{
-  id:1,title:"The Roof 134",category:"Gayrimenkul",description:"Premium konut projesi için dijital iletişim ve kampanya tasarımları.",
+  id:1,title:,category:"Gayrimenkul",description:"Premium konut projeleri için dijital iletişim ve kampanya tasarımları.",
   image:"https://images.unsplash.com/photo-1600607686527-6fb886090705?w=1000&h=750&fit=crop"
 }
   ,{
-  id:2,title:"EMAIR Aviation",category:"Havacılık",description:"Kurumsal sosyal medya dili ve özel havacılık odaklı görsel içerikler.",
+  id:2,title:,category:"Havacılık",description:"Kurumsal sosyal medya dili ve özel havacılık odaklı görsel içerikler.",
   image:"https://images.unsplash.com/photo-1540962351504-03099e0a754b?w=1000&h=750&fit=crop"
 }
   ,{
-  id:3,title:"Türk Telekom Basketbol",category:"Spor",description:"Maç günü, altyapı ve kulüp iletişimi için dinamik spor tasarımları.",
+  id:3,title:,category:"Spor",description:"Maç günü, altyapı ve kulüp iletişimi için dinamik spor tasarımları.",
   image:"https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1000&h=750&fit=crop"
 }
   ,{
-  id:4,title:"Kodsan",category:"Endüstri",description:"Endüstriyel ürün ve marka iletişimini güçlendiren kurumsal tasarım sistemi.",
+  id:4,title:,category:"Endüstri",description:"Endüstriyel ürün ve marka iletişimini güçlendiren kurumsal tasarım sistemi.",
   image:"https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=1000&h=750&fit=crop"
 }
   ,{
-  id:5,title:"medi Türkiye",category:"Medikal",description:"Ürün faydasını net anlatan, güven odaklı medikal iletişim tasarımları.",
+  id:5,title:,category:"Medikal",description:"Ürün faydasını net anlatan, güven odaklı medikal iletişim tasarımları.",
   image:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1000&h=750&fit=crop"
 }
   ,{
@@ -14531,10 +14531,10 @@ const m3=i=>i.replace(/^([A-Z])|[\s-_]+(\w)/g,(a,s,o)=>o?o.toUpperCase():s.toLow
   icon:V3,title:"Marka Kimliği",description:"Logodan renk sistemine kadar markanızın tüm temas noktalarında tutarlı bir dil."
 }
   ,{
-  icon:Y3,title:"Web Tasarım",description:"Modern, hızlı, responsive ve markanızın karakterine uygun web arayüzleri."
+  icon:Y3,title:"Web Tasarım",description:"Modern, hızlı, responsive ve markanızın karakterine uygun web arayüzleri.(Henüz Aktif Değil)"
 }
   ,{
-  icon:F3,title:"UI / UX",description:"Web ve mobil ürünler için sade, işlevsel ve kullanıcı odaklı deneyimler."
+  icon:F3,title:"UI / UX",description:"Web ve mobil ürünler için sade, işlevsel ve kullanıcı odaklı deneyimler.(Henüz Aktif Değil)"
 }
   ,{
   icon:z3,title:"Video & Motion",description:"Reels, tanıtım filmi, motion graphic ve dijital kampanya içerikleri."
@@ -14555,7 +14555,8 @@ const m3=i=>i.replace(/^([A-Z])|[\s-_]+(\w)/g,(a,s,o)=>o?o.toUpperCase():s.toLow
   value:"1",label:"Bütünleşik Tasarım Dili",icon:tf
 }
   ],f5=["Adobe Photoshop","Adobe Illustrator","After Effects","Premiere Pro","Figma","React","TypeScript","Vite"],d5=[{
-  number:"01",icon:t5,title:"Analiz & Strateji",description:"Markayı, hedef kitleyi ve iletişim ihtiyacını netleştirerek doğru yaratıcı yönü belirliyoruz."
+  number:
+    "01",icon:t5,title:"Analiz & Strateji",description:"Markayı, hedef kitleyi ve iletişim ihtiyacını netleştirerek doğru yaratıcı yönü belirliyoruz."
 }
   ,{
   number:"02",icon:_3,title:"Tasarım & Üretim",description:"Belirlenen stratejiyi güçlü tipografi, görsel dil ve işlevsel arayüzlerle tasarıma dönüştürüyoruz."
