@@ -14264,7 +14264,7 @@ const m3=i=>i.replace(/^([A-Z])|[\s-_]+(\w)/g,(a,s,o)=>o?o.toUpperCase():s.toLow
   key:"1xq2db"
 }
   ]],a5=Jt("zap",i5),ze={
-  shortBrand:"Aygun Design",website:"https://aygundesign.github.io/",email:"hello@aygundesign.com",location:"Türkiye / Online",
+  shortBrand:"Aygun Design",website:"https://aygundesign.github.io/",email:"ayguncelebi0@gmail.com",location:"Türkiye / Online",
     logoPath:"/logo.png.png",heroLogoPath:"/yenilogo.png",socialLinks:{
     instagram:"#",linkedin:"#",behance:"#"
   }
